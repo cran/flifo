@@ -39,7 +39,9 @@ function(.stack,
 {
   s <- deparse(substitute(.stack))
   env <- parent.frame()
-  if (!exists(s, envir = env)) stop("'.stack' does not exist in the calling environment")
+  if (!exists(s, envir = env)) {
+    stop("'.stack' does not exist in the calling environment")
+  }
 
   if (!is.stack(.stack)) stop("'.stack' must be a stack")
   if (missing(x)) stop("'x' is missing")
@@ -66,10 +68,12 @@ function(.stack,
   class(.stack) <- cl
   max_length(.stack) <- ml
   max_size(.stack) <- ms
-  assign(s, .stack, envir = env)
+  assign(s, .stack, envir = env, inherits = TRUE)
 
   ## Remove 'x' from the calling environment
-  if (exists(nx, envir = env)) rm(list = nx, envir = env)
+  if (exists(nx, envir = env, inherits = TRUE)) {
+    rm(list = nx, envir = env, inherits = TRUE)
+  }
   
   invisible(NULL)
 }
